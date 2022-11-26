@@ -2,11 +2,16 @@ version: '3.7'
 
 services:
   database:
-    image: mongo
-    container_name: node-boilerplate-mongo
+    image: mysql:8.0
+    container_name: node-boilerplate-mysql8
+    command: mysqld --default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: node-boilerplate
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     ports:
-      - "27017:27017" 
+      - '3306:3306'
     networks:
       - private-network
 
@@ -17,6 +22,12 @@ services:
     container_name: node-boilerplate-node
     environment:
       SERVER_PORT: 3000
+      SERVER_HOST: '0.0.0.0'
+      DB_NAME: 'node-boilerplate'
+      DB_USER_NAME: 'root'
+      DB_PASSWORD: 'root'
+      DB_PORT: 3306
+      DB_HOST: 'node-boilerplate-mysql8'
     command: npm start
     ports:
       - "3000:3000"
